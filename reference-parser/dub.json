@@ -1,0 +1,10 @@
+{
+    "name": "stratim",
+    "description": "Stratim 0.1-alpha Reference Parser",
+    "version": "0.1.0-alpha",
+    "license": "GPL-3.0",
+    "targetType": "executable",
+    "mainSourceFile": "source/main.d",
+    "sourcePaths": ["source"],
+    "dependencies": {}
+}

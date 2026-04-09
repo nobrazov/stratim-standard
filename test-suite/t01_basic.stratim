@@ -1,0 +1,15 @@
+~ t [Test Book]
+~ a [Petrov] first="Alexey"
+~ l ru
+~ x (city) [Moscow]
+
+~ * (title_page) [Title Page] @a,t,city type="fulllist"
+
+~ # (ch1) [Chapter 1]
+Text with ::: E italic ::: and #link[fn1].
+
+1. Item one
+1.1. Nested
+2. Item two
+
+~ f (fn1) [Footnote text.]

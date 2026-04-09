@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.1" xmlns:l="http://www.w3.org/1999/xlink">
+<description><title-info>
+<book-title>Test Book</book-title>
+<author>
+<last-name>Petrov</last-name>
+</author>
+<lang>ru</lang>
+</title-info>
+</description>
+<body>
+</body>
+</FictionBook>

@@ -1,0 +1,9 @@
+## ⚠️ Status: Alpha
+
+Stratim `0.1-alpha` is feature-complete for core book structure:
+- ✅ Metadata, sections, inline links, footnotes, formatting
+- ⚠️ Lists: content preserved, visual indentation via CSS (planned in beta)
+- ⚠️ Nesting `^`/`v`: basic support, full hierarchy in v0.2
+
+**Production use**: Safe for personal/archival conversion.  
+**Commercial use**: Requires [Commercial License](LICENSE-COMMERCIAL).
