@@ -1,0 +1,36 @@
+name: Stratim CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Dlang (LDC)
+      uses: dlang-community/setup-dlang@v1
+      with:
+        compiler: ldc-latest
+        
+    - name: Build Reference Parser
+      run: |
+        cd reference-parser
+        dub build --build=release
+        echo "✅ Parser built successfully"
+        
+    - name: Run Conversion Test
+      run: |
+        cd reference-parser
+        ./stratim ../test-suite/t01_basic.stratim /tmp/test_output.fb2
+        if [ -f /tmp/test_output.fb2 ] && [ -s /tmp/test_output.fb2 ]; then
+          echo "✅ Conversion test passed. Output size: $(wc -c < /tmp/test_output.fb2) bytes"
+        else
+          echo "❌ Conversion failed or output is empty"
+          exit 1
+        fi
