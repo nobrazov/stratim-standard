@@ -1,0 +1,103 @@
+%YAML 1.2
+---
+name: Stratim
+file_extensions:
+  - stratim
+scope: source.stratim
+contexts:
+  main:
+    # Команды: ~ t, ~ a, ~ #, ~ * и т.д.
+    - match: '^(~)\s*([a-zA-Z#*=_|>\-\/f])\s*'
+      captures:
+        1: keyword.operator.stratim
+        2: entity.name.function.stratim
+      push: command-args
+
+    # Сноски: ~ f (id)
+    - match: '^(~)\s*(f)\s*'
+      captures:
+        1: keyword.operator.stratim
+        2: entity.name.function.stratim
+      push: footnote-id
+
+    # Ссылки в тексте: #текст[id] или #текст[id^]
+    - match: '(#)([^\[]+?)(\[)([^\^\]]+?)(\^?)(\])'
+      captures:
+        1: markup.underline.link.stratim
+        2: string.other.link.title.stratim
+        3: punctuation.definition.link.stratim
+        4: string.other.link.target.stratim
+        5: keyword.other.footnote.stratim
+        6: punctuation.definition.link.stratim
+
+    # Дескрипторы: ::: E текст :::
+    - match: '(:::)\s*'
+      scope: constant.character.escape.stratim
+      push: descriptor-content
+
+    # Нумерованные списки: 1. 2.1.
+    - match: '^(\s*)(\d+)((?:\.\d+)*)\.'
+      captures:
+        1: text
+        2: constant.numeric.stratim
+        3: constant.numeric.stratim
+
+    # Маркированные списки: -
+    - match: '^(\s*)(-)\s+'
+      captures:
+        1: text
+        2: punctuation.definition.bullet.stratim
+
+  command-args:
+    # ID в круглых скобках: (title)
+    - match: '(\()([^)]+)(\))'
+      captures:
+        1: punctuation.definition.id.begin.stratim
+        2: entity.name.type.id.stratim
+        3: punctuation.definition.id.end.stratim
+
+    # Текст в квадратных скобках: [Заголовок]
+    - match: '(\[)([^\]]+)(\])'
+      captures:
+        1: punctuation.definition.string.begin.stratim
+        2: string.quoted.bracket.stratim
+        3: punctuation.definition.string.end.stratim
+
+    # Атрибуты: @t,a,translator
+    - match: '(@)([a-zA-Z,]+)'
+      captures:
+        1: keyword.other.attribute.stratim
+        2: variable.other.attribute.stratim
+
+    # Параметры: type="fulllist"
+    - match: '([a-zA-Z-]+)(=)(")([^"]+)(")'
+      captures:
+        1: entity.other.attribute-name.stratim
+        2: keyword.operator.assignment.stratim
+        3: punctuation.definition.string.begin.stratim
+        4: string.quoted.double.stratim
+        5: punctuation.definition.string.end.stratim
+
+    # Выход из контекста команды
+    - match: '$'
+      pop: true
+
+  footnote-id:
+    - match: '(\()([^)]+)(\))'
+      captures:
+        1: punctuation.definition.id.begin.stratim
+        2: entity.name.type.id.stratim
+        3: punctuation.definition.id.end.stratim
+      pop: true
+
+  descriptor-content:
+    # Тег дескриптора: E, S, Q, C
+    - match: '([A-Z])\s+'
+      scope: storage.type.descriptor.stratim
+
+    # Текст дескриптора
+    - match: '(.+?)(:::)'
+      captures:
+        1: string.quoted.double.stratim
+        2: constant.character.escape.stratim
+      pop: true
