@@ -144,5 +144,13 @@ See #this section[ch1] and #footnote[fn1^].
 
 ---
 
+## 💖 Support Stratim
+
+Help us keep Stratim free and open-source:
+
+🇷 **Russia & CIS:**
+- [ЮMoney](https://yoomoney.ru/to/4100118167547949)
+- [CloudTips](https://pay.cloudtips.ru/p/b9b3f72c)
+
 **Stratim Project** — Deterministic book structure for the digital age.  
 © 2026 Stratim Project. All rights reserved.

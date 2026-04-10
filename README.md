@@ -112,6 +112,14 @@ cd test-suite
 
 Semantic Versioning 2.0.0. `0.1` is the initial stable release. Backward compatibility of command syntax is guaranteed within a major version.
 
+## 💖 Support Stratim
+
+Help us keep Stratim free and open-source:
+
+🇷 **Russia & CIS:**
+- [ЮMoney](https://yoomoney.ru/to/4100118167547949)
+- [CloudTips](https://pay.cloudtips.ru/p/b9b3f72c)
+
 ---
 
 **Stratim 0.1** — Deterministic book structure for the digital age.  
