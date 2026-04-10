@@ -1,0 +1,3 @@
+*.stratim linguist-language=Stratim
+*.stratim linguist-detectable
+*.stratim diff=astextplain
