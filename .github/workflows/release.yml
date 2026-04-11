@@ -37,6 +37,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install system dependencies
+        if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y build-essential gcc
 
       - name: Install D compiler (LDC)
@@ -90,7 +91,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/*.zip
+          files: artifacts/*
           draft: false
           prerelease: false
           generate_release_notes: true
