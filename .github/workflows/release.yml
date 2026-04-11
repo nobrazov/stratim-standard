@@ -1,0 +1,95 @@
+name: Build Release Binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: x64
+            target: linux-x64
+            dub_arch: x86_64
+          - os: ubuntu-latest
+            arch: arm64
+            target: linux-arm64
+            dub_arch: aarch64
+          - os: windows-latest
+            arch: x64
+            target: windows-x64
+            dub_arch: x86_64
+          - os: macos-latest
+            arch: x64
+            target: macos-x64
+            dub_arch: x86_64
+          - os: macos-latest
+            arch: arm64
+            target: macos-arm64
+            dub_arch: aarch64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install D compiler (LDC)
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ldc-latest
+
+      - name: Build for ${{ matrix.target }}
+        run: |
+          cd reference-parser
+          dub build --build=release --arch=${{ matrix.dub_arch }}
+          
+      - name: Prepare binary
+        shell: bash
+        run: |
+          mkdir -p release-artifacts
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            cp reference-parser/.dub/build/release/stratim.exe release-artifacts/stratim-${{ matrix.target }}.exe
+          else
+            cp reference-parser/.dub/build/release/stratim release-artifacts/stratim-${{ matrix.target }}
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stratim-${{ matrix.target }}
+          path: release-artifacts/stratim-${{ matrix.target }}${{ runner.os == 'Windows' && '.exe' || '' }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release files
+        run: |
+          cd artifacts
+          for dir in */; do
+            cd "$dir"
+            if [ -f *.exe ]; then
+              zip ../${dir%/}.zip *.exe
+            else
+              tar -czf ../${dir%/}.tar.gz *
+            fi
+            cd ..
+          done
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/*.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
