@@ -15,7 +15,7 @@ jobs:
           - os: ubuntu-latest
             target: linux-x64
             dub_arch: x86_64
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             target: linux-arm64
             dub_arch: aarch64
           - os: windows-latest
@@ -34,12 +34,7 @@ jobs:
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gcc
-          if [ "${{ matrix.target }}" == "linux-arm64" ]; then
-            sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
-          fi
+        run: sudo apt-get update && sudo apt-get install -y build-essential gcc
 
       - name: Install D compiler (LDC)
         uses: dlang-community/setup-dlang@v1
@@ -49,7 +44,7 @@ jobs:
       - name: Build for ${{ matrix.target }}
         run: |
           cd reference-parser
-          dub build --compiler=ldc2 --build=release --arch=${{ matrix.dub_arch }}
+          dub build --compiler=ldc2 --build=release --arch=${{ matrix.dub_arch }} --force
 
       - name: Prepare binary
         shell: bash
