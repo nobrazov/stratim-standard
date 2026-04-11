@@ -36,6 +36,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential gcc
+
       - name: Install D compiler (LDC)
         uses: dlang-community/setup-dlang@v1
         with:
@@ -44,8 +47,8 @@ jobs:
       - name: Build for ${{ matrix.target }}
         run: |
           cd reference-parser
-          dub build --build=release --arch=${{ matrix.dub_arch }}
-          
+          dub build --compiler=ldc2 --build=release --arch=${{ matrix.dub_arch }}
+
       - name: Prepare binary
         shell: bash
         run: |
