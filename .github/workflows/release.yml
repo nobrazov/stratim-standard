@@ -13,23 +13,18 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            arch: x64
             target: linux-x64
             dub_arch: x86_64
           - os: ubuntu-latest
-            arch: arm64
             target: linux-arm64
             dub_arch: aarch64
           - os: windows-latest
-            arch: x64
             target: windows-x64
             dub_arch: x86_64
           - os: macos-latest
-            arch: x64
             target: macos-x64
             dub_arch: x86_64
           - os: macos-latest
-            arch: arm64
             target: macos-arm64
             dub_arch: aarch64
 
@@ -39,7 +34,12 @@ jobs:
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y build-essential gcc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc
+          if [ "${{ matrix.target }}" == "linux-arm64" ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+          fi
 
       - name: Install D compiler (LDC)
         uses: dlang-community/setup-dlang@v1
@@ -56,9 +56,10 @@ jobs:
         run: |
           mkdir -p release-artifacts
           if [ "${{ runner.os }}" == "Windows" ]; then
-            cp reference-parser/.dub/build/release/stratim.exe release-artifacts/stratim-${{ matrix.target }}.exe
+            cp reference-parser/stratim.exe release-artifacts/stratim-${{ matrix.target }}.exe
           else
-            cp reference-parser/.dub/build/release/stratim release-artifacts/stratim-${{ matrix.target }}
+            cp reference-parser/stratim release-artifacts/stratim-${{ matrix.target }}
+            chmod +x release-artifacts/stratim-${{ matrix.target }}
           fi
 
       - name: Upload artifact
